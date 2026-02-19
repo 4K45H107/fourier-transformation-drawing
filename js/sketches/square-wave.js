@@ -8,7 +8,7 @@ let squareWaveState = {
 };
 
 function setupSquareWave(p) {
-    p.createCanvas(800, 600);
+    p.createCanvas(1200, 700);
     p.background(0);
     
     // Create UI controls
@@ -20,7 +20,7 @@ function drawSquareWave(p) {
     p.background(0);
     
     // Translate to the center of the canvas
-    p.translate(170, 300);
+    p.translate(350, 350);
     
     let X = 0;
     let Y = 0;
@@ -29,7 +29,7 @@ function drawSquareWave(p) {
     for (let i = 0; i < squareWaveState.numCircles; i++) {
 
         let N = 2*i + 1;
-        let RADIUS = 4 * 70 / (N * Math.PI);
+        let RADIUS = 4 * 100 / (N * Math.PI);
 
         let prevX = X;
         let prevY = Y;
@@ -72,19 +72,16 @@ function drawSquareWave(p) {
 
     // Only add new wave points and increment TIME if not paused
     if (!squareWaveState.paused) {
-        // Add the Y value to draw the wave
+ 
         squareWaveState.WAVE.unshift(Y);
-        
-        // Increment TIME
         squareWaveState.TIME += squareWaveState.speed;
         
-        // Limit wave length
-        if(squareWaveState.WAVE.length > 370) {
+        if(squareWaveState.WAVE.length > 400) {
             squareWaveState.WAVE.pop();
         }
     }
 
-    if(squareWaveState.WAVE.length > 370) {
+    if(squareWaveState.WAVE.length > 400) {
         squareWaveState.WAVE.pop();
     }
 }
