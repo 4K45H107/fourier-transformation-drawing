@@ -3,21 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fourier Transformation Drawing</title>
+    <title>Fourier Transformations</title>
+    <link rel="stylesheet" href="css/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.js"></script>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #1a1a1a;
-        }
-    </style>
 </head>
 <body>
-    <script src="sketch.js"></script>
+    <!-- Menu Container -->
+    <div id="menu-container">
+        <h1>Fourier Transformations</h1>
+        <p>Interactive visualizations of Fourier series and transformations</p>
+        
+        <div class="menu-grid">
+            <button class="menu-btn" data-sketch="square-wave">
+                <h2>Square Wave</h2>
+                <p>Visualization of square wave using epicycles</p>
+            </button>
+            
+            <!-- Add more buttons here as you create new sketches -->
+            <!-- 
+            <button class="menu-btn" data-sketch="draw-fourier">
+                <h2>Draw with Fourier</h2>
+                <p>Draw any shape and see it recreated using Fourier series</p>
+            </button>
+            -->
+        </div>
+    </div>
+    
+    <!-- Sketch Container -->
+    <div id="sketch-container" style="display: none;"></div>
+    
+    <!-- Back Button -->
+    <button id="back-btn" style="display: none;">← Back to Menu</button>
+    
+    <!-- Load scripts -->
+    <script src="js/sketches/square-wave.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/menu.js"></script>
 </body>
 </html>
