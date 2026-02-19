@@ -44,6 +44,11 @@ function showSketch(sketchName) {
             sketches[currentSketchName].reset();
         }
         currentSketch.remove();
+        // Clean up any sketch-specific UI controls
+        const existingControls = document.getElementById('square-wave-controls');
+        if (existingControls) {
+            existingControls.remove();
+        }
     }
     
     // Initialize new sketch
