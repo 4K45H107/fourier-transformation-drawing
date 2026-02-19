@@ -1,0 +1,10 @@
+{
+    "name": "fourier-transformation-drawing",
+    "version": "1.0.0",
+    "scripts": {
+      "dev": "browser-sync start --server --files '*.html, *.js, *.css' --no-notify"
+    },
+    "devDependencies": {
+      "browser-sync": "^2.29.3"
+    }
+  }
