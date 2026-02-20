@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fourier Transformations</title>
+    <title>Fourier</title>
     <link rel="stylesheet" href="css/landing.css">
     <link rel="stylesheet" href="css/sketches.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.js"></script>
@@ -11,27 +11,18 @@
 <body>
     <!-- Menu Container -->
     <div id="menu-container">
-        <h1>Fourier Transformations</h1>
-        <p>Interactive visualizations of Fourier series and transformations</p>
+        <h1>Fourier - The prism for signals</h1>
+        <p>Every signal is just a symphony of sine waves.</p>
         
         <div class="menu-grid">
             <button class="menu-btn" data-sketch="square-wave">
-                <h2>Square Wave</h2>
+                <h2>Fourier Series: Square Wave</h2>
                 <p>Visualization of square wave using epicycles</p>
             </button>
-
             <button class="menu-btn" data-sketch="draw-fourier">
-                <h2>Draw with Fourier Transformation</h2>
-                <p>Draw any shape and see it recreated using Fourier transformation</p>
+                <h2>Fourier Transformation Arts</h2>
+                <p>Draw any shape using Fourier transformation</p>
             </button>
-            
-            <!-- Add more buttons here as you create new sketches -->
-            <!-- 
-            <button class="menu-btn" data-sketch="draw-fourier">
-                <h2>Draw with Fourier</h2>
-                <p>Draw any shape and see it recreated using Fourier series</p>
-            </button>
-            -->
         </div>
     </div>
     
@@ -44,6 +35,7 @@
     <!-- Load scripts -->
     <script src="js/utils/ui.js"></script>
     <script src="js/components/square-wave-controls.js"></script>
+    <script src="js/components/draw-fourier-controls.js"></script>
     <script src="js/sketches/square-wave.js"></script>
     <script src="js/sketches/draw-with-fourier-transformation.js"></script>  
     <script src="js/main.js"></script>

@@ -16,21 +16,41 @@ const sketches = {
     }
 };
 
+// Cleanup helper function
+function cleanupSketch() {
+    if (!currentSketch) return;
+    
+    // Remove all controls
+    const squareWaveControls = document.getElementById('square-wave-controls');
+    if (squareWaveControls) squareWaveControls.remove();
+    
+    const drawFourierControls = document.getElementById('draw-fourier-controls');
+    if (drawFourierControls) drawFourierControls.remove();
+    
+    // Reset state
+    if (sketches[currentSketchName]?.reset) {
+        sketches[currentSketchName].reset();
+    }
+    
+    // Remove p5 instance and clear container
+    currentSketch.remove();
+    currentSketch = null;
+    
+    const container = document.getElementById('sketch-container');
+    container.innerHTML = '';
+    
+    // Reset container styles
+    container.removeAttribute('style');
+}
+
 function showMenu() {
     document.body.classList.remove('sketch-page');
     document.getElementById('menu-container').style.display = 'block';
     document.getElementById('sketch-container').style.display = 'none';
     document.getElementById('back-btn').style.display = 'none';
     
-    // Clean up current sketch
-    if (currentSketch) {
-        if (sketches[currentSketchName] && sketches[currentSketchName].reset) {
-            sketches[currentSketchName].reset();
-        }
-        currentSketch.remove();
-        currentSketch = null;
-        currentSketchName = null;
-    }
+    cleanupSketch();
+    currentSketchName = null;
 }
 
 function showSketch(sketchName) {
@@ -40,29 +60,33 @@ function showSketch(sketchName) {
         return;
     }
 
-    document.body.classList.add('sketch-page');
-    document.getElementById('menu-container').style.display = 'none';
-    document.getElementById('sketch-container').style.display = 'block';
-    document.getElementById('back-btn').style.display = 'block';
-    
     // Clean up previous sketch
-    if (currentSketch) {
-        if (sketches[currentSketchName] && sketches[currentSketchName].reset) {
-            sketches[currentSketchName].reset();
-        }
-        currentSketch.remove();
-        // Clean up any sketch-specific UI controls
-        const existingControls = document.getElementById('square-wave-controls');
-        if (existingControls) {
-            existingControls.remove();
-        }
-    }
+    cleanupSketch();
+    
+    // Reset styles to prevent layout issues
+    document.body.classList.add('sketch-page');
+    document.body.style.height = '';
+    document.body.style.minHeight = '';
+    document.body.style.maxHeight = '';
+    document.documentElement.style.height = '';
+    document.documentElement.style.minHeight = '';
+    document.documentElement.style.maxHeight = '';
+    
+    // Setup container
+    const container = document.getElementById('sketch-container');
+    container.style.height = '';
+    container.style.minHeight = '';
+    container.style.maxHeight = '';
+    container.style.width = '';
+    container.style.display = 'block';
+    
+    document.getElementById('menu-container').style.display = 'none';
+    document.getElementById('back-btn').style.display = 'block';
     
     // Initialize new sketch
     currentSketchName = sketchName;
     const sketch = sketches[sketchName];
     
-    // Create new p5 instance in instance mode
     currentSketch = new p5(function(p) {
         p.setup = function() {
             sketch.setup(p);

@@ -2,9 +2,9 @@
 let squareWaveState = {
     TIME: 0,
     WAVE: [],
-    numCircles: 10,  // Number of circles (N)
-    paused: false,   // Pause state
-    speed: 0.05      // Speed of animation (TIME increment per frame)
+    numCircles: 10, 
+    paused: false,
+    speed: 0.05 
 };
 
 function setupSquareWave(p) {
@@ -72,16 +72,12 @@ function drawSquareWave(p) {
 
     // Only add new wave points and increment TIME if not paused
     if (!squareWaveState.paused) {
- 
         squareWaveState.WAVE.unshift(Y);
         squareWaveState.TIME += squareWaveState.speed;
-        
-        if(squareWaveState.WAVE.length > 400) {
-            squareWaveState.WAVE.pop();
-        }
     }
-
-    if(squareWaveState.WAVE.length > 400) {
+    
+    // Limit wave history length
+    if (squareWaveState.WAVE.length > 400) {
         squareWaveState.WAVE.pop();
     }
 }
@@ -89,8 +85,7 @@ function drawSquareWave(p) {
 function resetSquareWave() {
     squareWaveState.TIME = 0;
     squareWaveState.WAVE = [];
-    squareWaveState.numCircles = 10; // Reset to default
-    squareWaveState.paused = false; // Reset pause state
-    squareWaveState.speed = 0.05; // Reset speed to default
-    removeSquareWaveControls();
+    squareWaveState.numCircles = 10;
+    squareWaveState.paused = false;
+    squareWaveState.speed = 0.05;
 }
