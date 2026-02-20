@@ -17,6 +17,7 @@ const sketches = {
 };
 
 function showMenu() {
+    document.body.classList.remove('sketch-page');
     document.getElementById('menu-container').style.display = 'block';
     document.getElementById('sketch-container').style.display = 'none';
     document.getElementById('back-btn').style.display = 'none';
@@ -39,6 +40,7 @@ function showSketch(sketchName) {
         return;
     }
 
+    document.body.classList.add('sketch-page');
     document.getElementById('menu-container').style.display = 'none';
     document.getElementById('sketch-container').style.display = 'block';
     document.getElementById('back-btn').style.display = 'block';

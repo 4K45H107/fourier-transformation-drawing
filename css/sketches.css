@@ -1,0 +1,109 @@
+body.sketch-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#sketch-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+#sketch-container canvas {
+    display: block;
+    margin: 0 auto;
+}
+
+#back-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: #000000;
+    border: 2px solid #ffffff;
+    border-radius: 8px;
+    padding: 12px 24px;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+#back-btn:hover {
+    background: #1a1a1a;
+    border-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
+}
+
+#back-btn:active {
+    transform: scale(0.95);
+}
+
+/* Square Wave Controls */
+#square-wave-controls {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000000;
+    border: 2px solid #ffffff;
+    border-radius: 6px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 1000;
+    font-family: Arial, sans-serif;
+}
+
+.control-label {
+    color: #ffffff;
+    font-size: 0.85rem;
+}
+
+.control-btn {
+    background: #000000;
+    border: 2px solid #ffffff;
+    border-radius: 3px;
+    color: #ffffff;
+    width: 28px;
+    height: 28px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.control-btn:hover {
+    background: #1a1a1a;
+}
+
+.control-btn:active {
+    transform: scale(0.95);
+}
+
+#circle-count-display {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+    min-width: 25px;
+    text-align: center;
+}
+
+/* Responsive design for sketches */
+@media (max-width: 768px) {
+    #square-wave-controls {
+        top: 70px;
+        right: 10px;
+        padding: 10px 15px;
+        gap: 10px;
+    }
+}
