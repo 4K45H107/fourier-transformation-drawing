@@ -8,6 +8,11 @@ const sketches = {
         setup: setupSquareWave,
         draw: drawSquareWave,
         reset: resetSquareWave
+    },
+    'draw-fourier': {
+        setup: setupDrawWithFourierTransformation,
+        draw: drawDrawWithFourierTransformation,
+        reset: resetDrawWithFourierTransformation
     }
 };
 
