@@ -17,31 +17,6 @@ function createDrawFourierControls(state) {
     const container = document.createElement('div');
     container.id = 'draw-fourier-controls';
     
-    // Speed control
-    const speedControl = createControlGroup({
-        label: 'Speed:',
-        value: () => state.speed,
-        displayId: 'draw-fourier-speed-display',
-        min: 1,
-        max: 10,
-        step: 1,
-        formatValue: (val) => val.toString(),
-        onDecrease: () => {
-            if (state.speed > 1) {
-                state.speed--;
-            }
-        },
-        onIncrease: () => {
-            if (state.speed < 10) {
-                state.speed++;
-            }
-        }
-    });
-    container.appendChild(speedControl);
-    
-    // Add separator
-    container.appendChild(createSeparator());
-    
     // Pause/Play button
     const pausePlayBtn = createActionButton({
         id: 'draw-fourier-pause-play-btn',
@@ -61,12 +36,20 @@ function createDrawFourierControls(state) {
         text: '↻',
         onClick: () => {
             state.TIME = 0;
-            state.SIGNAL = [];
             state.WAVE = [];
-            state.fourierY = [];
-            state.numCircles = 10;
-            state.speed = 1;
-            updateDisplay('draw-fourier-speed-display', state.speed.toString());
+            state.paused = false;
+            
+            // Regenerate SIGNAL and fourierY
+            state.SIGNAL = [];
+            for(let i = 0; i < 250; i++) {
+                state.SIGNAL[i] = i;
+            }
+            state.fourierY = DFT(state.SIGNAL);
+            
+            const btn = document.getElementById('draw-fourier-pause-play-btn');
+            if (btn) {
+                btn.textContent = '⏸';
+            }
         }
     });
     resetBtn.style.cssText = 'width: 28px; padding: 0; min-width: 28px;';

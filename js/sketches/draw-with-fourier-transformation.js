@@ -12,7 +12,7 @@ function setupDrawWithFourierTransformation(p) {
     p.createCanvas(1200, 700);
     p.background(0);
 
-    for(let i = 0; i < 250; i++) {
+    for(let i = 0; i < 200; i++) {
         drawFourierState.SIGNAL[i] = i;
     }
     drawFourierState.fourierY = DFT(drawFourierState.SIGNAL);
@@ -70,7 +70,12 @@ function drawDrawWithFourierTransformation(p) {
     if (!drawFourierState.paused) {
         drawFourierState.WAVE.unshift(Y);
         const dt = 2 * Math.PI / N;
-        drawFourierState.TIME += dt * drawFourierState.speed;
+        drawFourierState.TIME += dt;
+        
+        // Wrap TIME around 2π
+        if (drawFourierState.TIME >= 2 * Math.PI) {
+            drawFourierState.TIME -= 2 * Math.PI;
+        }
     }
     
     if (drawFourierState.WAVE.length > 400) {
@@ -80,9 +85,13 @@ function drawDrawWithFourierTransformation(p) {
 
 function resetDrawWithFourierTransformation() {
     drawFourierState.TIME = 0;
-    drawFourierState.SIGNAL = [];
     drawFourierState.WAVE = [];
-    drawFourierState.fourierY = [];
     drawFourierState.paused = false;
-    drawFourierState.speed = 1;
+    
+    // Regenerate SIGNAL and fourierY
+    drawFourierState.SIGNAL = [];
+    for(let i = 0; i < 250; i++) {
+        drawFourierState.SIGNAL[i] = i;
+    }
+    drawFourierState.fourierY = DFT(drawFourierState.SIGNAL);
 }
