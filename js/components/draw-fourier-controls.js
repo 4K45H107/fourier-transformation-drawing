@@ -36,15 +36,8 @@ function createDrawFourierControls(state) {
         text: '↻',
         onClick: () => {
             state.TIME = 0;
-            state.WAVE = [];
+            state.PATH = [];
             state.paused = false;
-            
-            // Regenerate SIGNAL and fourierY
-            state.SIGNAL = [];
-            for(let i = 0; i < 250; i++) {
-                state.SIGNAL[i] = i;
-            }
-            state.fourierY = DFT(state.SIGNAL);
             
             const btn = document.getElementById('draw-fourier-pause-play-btn');
             if (btn) {
