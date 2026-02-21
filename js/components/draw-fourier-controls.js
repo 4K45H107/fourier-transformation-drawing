@@ -1,11 +1,3 @@
-// Draw Fourier Controls Component
-// Handles all UI controls for the draw with Fourier transformation visualization
-
-/**
- * Creates the controls panel for draw Fourier visualization
- * @param {Object} state - The draw Fourier state object
- * @returns {HTMLElement} The controls container element
- */
 function createDrawFourierControls(state) {
     // Remove existing controls if any
     const existing = document.getElementById('draw-fourier-controls');
@@ -52,9 +44,6 @@ function createDrawFourierControls(state) {
     return container;
 }
 
-/**
- * Removes the draw Fourier controls
- */
 function removeDrawFourierControls() {
     removeControl('draw-fourier-controls');
 }

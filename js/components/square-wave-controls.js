@@ -1,13 +1,5 @@
-// Square Wave Controls Component
-// Handles all UI controls for the square wave visualization
-
-/**
- * Creates the controls panel for square wave visualization
- * @param {Object} state - The square wave state object
- * @returns {HTMLElement} The controls container element
- */
 function createSquareWaveControls(state) {
-    // Remove existing controls if any
+    // Remove existing controls
     const existing = document.getElementById('square-wave-controls');
     if (existing) {
         existing.remove();
@@ -20,7 +12,7 @@ function createSquareWaveControls(state) {
     // Circles control
     const circlesControl = createControlGroup({
         label: 'Circles:',
-        value: () => state.numCircles, // Getter function
+        value: () => state.numCircles,
         displayId: 'circle-count-display',
         min: 1,
         max: 50,
@@ -29,13 +21,11 @@ function createSquareWaveControls(state) {
         onDecrease: () => {
             if (state.numCircles > 1) {
                 state.numCircles--;
-                // Wave continues smoothly with new circle count
             }
         },
         onIncrease: () => {
             if (state.numCircles < 50) {
                 state.numCircles++;
-                // Wave continues smoothly with new circle count
             }
         }
     });
@@ -47,7 +37,7 @@ function createSquareWaveControls(state) {
     // Speed control
     const speedControl = createControlGroup({
         label: 'Speed:',
-        value: () => state.speed, // Getter function
+        value: () => state.speed,
         displayId: 'speed-display',
         min: 0.01,
         max: 0.5,
@@ -89,13 +79,12 @@ function createSquareWaveControls(state) {
         onClick: () => {
             state.TIME = 0;
             state.WAVE = [];
-            state.numCircles = 10; // Reset circles to default
-            state.speed = 0.05; // Reset speed to default
+            state.numCircles = 10;
+            state.speed = 0.05;
             updateDisplay('speed-display', state.speed.toFixed(2));
             updateDisplay('circle-count-display', state.numCircles.toString());
         }
     });
-    // Reset button can be slightly wider since it doesn't change
     resetBtn.style.cssText = 'width: 28px; padding: 0; min-width: 28px;';
     container.appendChild(resetBtn);
     
@@ -103,11 +92,6 @@ function createSquareWaveControls(state) {
     return container;
 }
 
-/**
- * Creates a control group with label, decrease/increase buttons, and display
- * @param {Object} options - Configuration options
- * @returns {HTMLElement} The control group container
- */
 function createControlGroup(options) {
     const {
         label,
@@ -136,7 +120,6 @@ function createControlGroup(options) {
     decreaseBtn.className = 'control-btn';
     decreaseBtn.onclick = () => {
         onDecrease();
-        // Update display with current value from state
         const getCurrentValue = typeof value === 'function' ? value : () => value;
         updateDisplay(displayId, formatValue(getCurrentValue()));
     };
@@ -156,7 +139,6 @@ function createControlGroup(options) {
     increaseBtn.className = 'control-btn';
     increaseBtn.onclick = () => {
         onIncrease();
-        // Update display with current value from state
         const getCurrentValue = typeof value === 'function' ? value : () => value;
         updateDisplay(displayId, formatValue(getCurrentValue()));
     };
@@ -165,11 +147,6 @@ function createControlGroup(options) {
     return container;
 }
 
-/**
- * Creates an action button (pause/play, reset, etc.)
- * @param {Object} options - Configuration options
- * @returns {HTMLElement} The button element
- */
 function createActionButton(options) {
     const {
         id,
@@ -181,26 +158,18 @@ function createActionButton(options) {
     if (id) button.id = id;
     button.className = 'control-btn';
     button.textContent = text;
-    // Fixed width to prevent size changes when text changes
     button.style.cssText = 'width: 28px; padding: 0; min-width: 28px;';
     button.onclick = onClick;
     
     return button;
 }
 
-/**
- * Creates a separator element
- * @returns {HTMLElement} The separator element
- */
 function createSeparator() {
     const separator = document.createElement('span');
     separator.style.cssText = 'width: 1px; height: 24px; background: #ffffff; margin: 0 6px;';
     return separator;
 }
 
-/**
- * Removes the square wave controls
- */
 function removeSquareWaveControls() {
     removeControl('square-wave-controls');
 }

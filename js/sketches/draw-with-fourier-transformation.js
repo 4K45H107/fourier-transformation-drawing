@@ -13,29 +13,10 @@ function setupDrawWithFourierTransformation(p) {
     p.createCanvas(1200, 700);
     p.background(0);
 
-    // CIRCLE
-    // for(let i = 0; i < 100; i++) {
-    //     let angle = p.map(i, 0, 100, 0, p.TWO_PI);
-    //     drawFourierState.SIGNAL_X[i] = 100 * p.cos(angle) ;
-    // }
-
-    // for(let i = 0; i < 100; i++) {
-    //     let angle = p.map(i, 0, 100, 0, p.TWO_PI);
-    //     drawFourierState.SIGNAL_Y[i] = 100 * p.sin(angle) ;
-    // }
-
-    let k = 4;
-    let N = 100;
-
-    for (let i = 0; i < N; i++) {
-        let angle = p.map(i, 0, N, 0, p.TWO_PI);
-
-        let r = 100 * p.cos(k * angle);  // rose radius
-
-        drawFourierState.SIGNAL_X[i] = r * p.cos(angle);
-        drawFourierState.SIGNAL_Y[i] = r * p.sin(angle);
-    }
-
+    // let signals = generateCircleSignal(p, 300, 120); // CIRCLE
+     let signals = generateRoseSignal(p, 500, 4, 100); // ROSE PATTERN
+    drawFourierState.SIGNAL_X = signals.signalX;
+    drawFourierState.SIGNAL_Y = signals.signalY;
 
     drawFourierState.fourierX = DFT(drawFourierState.SIGNAL_X);
     drawFourierState.fourierY = DFT(drawFourierState.SIGNAL_Y);
