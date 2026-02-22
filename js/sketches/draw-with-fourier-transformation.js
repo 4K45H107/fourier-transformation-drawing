@@ -1,6 +1,9 @@
 let drawFourierState = {
+    mode: 'single',
+    SIGNAL: [],
     SIGNAL_X: [],
     SIGNAL_Y: [],
+    fourier: [],
     fourierX: [],
     fourierY: [],
     PATH: [],
@@ -13,87 +16,29 @@ function setupDrawWithFourierTransformation(p) {
     p.createCanvas(1200, 700);
     p.background(0);
 
+    // Generate signals
     // let signals = generateCircleSignal(p, 300, 120); // CIRCLE
-     let signals = generateRoseSignal(p, 500, 4, 100); // ROSE PATTERN
-    drawFourierState.SIGNAL_X = signals.signalX;
-    drawFourierState.SIGNAL_Y = signals.signalY;
+    // let signals = generateRoseSignal(p, 500, 4, 100); // ROSE PATTERN
+    // let signals = generatePiSignal(p, 300, 120); // PI PATTERN
+    let signals = generateButterflySignal(p, 300, 50); // BUTTERFLY PATTERN
 
-    drawFourierState.fourierX = DFT(drawFourierState.SIGNAL_X);
-    drawFourierState.fourierY = DFT(drawFourierState.SIGNAL_Y);
+    
+    if (drawFourierState.mode === 'dual') {
+        setupDualEpicycleMode(p, drawFourierState, signals);
+    }
+    else if (drawFourierState.mode === 'single') {
+        setupSingleEpicycleMode(p, drawFourierState, signals);
+    }
   
     createDrawFourierControls(drawFourierState);
 }
 
-function epicycles(p, startX, startY, rotation, fourier) {
-
-    let X = startX;
-    let Y = startY;
-    const N = fourier.length;
-
-    for (let i = 0; i < N; i++) {
-
-        let prevX = X;
-        let prevY = Y;
-
-        let FREQ = fourier[i].freq;
-        let RADIUS = fourier[i].amp;
-        let PHASE = fourier[i].phase;
-
-        X += RADIUS * p.cos(FREQ * drawFourierState.TIME + PHASE + rotation);
-        Y += RADIUS * p.sin(FREQ * drawFourierState.TIME + PHASE + rotation);
-
-        p.stroke(255, 100);
-        p.noFill();
-        p.ellipse(prevX, prevY, RADIUS * 2);
-
-        p.stroke(255);
-        p.line(prevX, prevY, X, Y);
-
-        prevX = X;
-        prevY = Y;
-    }
-
-    return p.createVector(X, Y);
-}
-
 function drawDrawWithFourierTransformation(p) {
-    p.background(0);
-    
-    const posX = epicycles(p, 800, 150, 0, drawFourierState.fourierX);
-    const posY = epicycles(p, 200, 450, p.HALF_PI, drawFourierState.fourierY);
-
-    let finalPos = p.createVector(posX.x, posY.y);
-
-    if (drawFourierState.PATH.length > 0) {
-        
-        p.stroke(255);
-
-        p.line(posX.x, posX.y, finalPos.x, finalPos.y);
-        p.line(posY.x, posY.y, finalPos.x, finalPos.y);
-
-        p.line(finalPos.x, finalPos.y, drawFourierState.PATH[0].x, drawFourierState.PATH[0].y);
-
-        p.beginShape();
-        p.noFill();
-        for(let i = 0; i < drawFourierState.PATH.length; i++) {
-            p.vertex(drawFourierState.PATH[i].x, drawFourierState.PATH[i].y);
-        }
-        p.endShape();
+    if (drawFourierState.mode === 'dual') {
+        drawDualEpicycleMode(p, drawFourierState);
     }
-
-    if (!drawFourierState.paused) {
-
-        drawFourierState.PATH.unshift(finalPos);
-        
-        const N = drawFourierState.SIGNAL_X.length; 
-        const dt = p.TWO_PI / N;
-        
-        drawFourierState.TIME += dt;
-    }
-    
-    if (drawFourierState.TIME >= p.TWO_PI) {
-        drawFourierState.TIME = 0;
-        drawFourierState.PATH = [];
+    else if (drawFourierState.mode === 'single') {
+        drawSingleEpicycleMode(p, drawFourierState);
     }
 }
 
