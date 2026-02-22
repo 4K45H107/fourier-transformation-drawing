@@ -27,6 +27,9 @@ function cleanupSketch() {
     const drawFourierControls = document.getElementById('draw-fourier-controls');
     if (drawFourierControls) drawFourierControls.remove();
     
+    const drawFourierModeControls = document.getElementById('draw-fourier-mode-controls');
+    if (drawFourierModeControls) drawFourierModeControls.remove();
+    
     // Reset state
     if (sketches[currentSketchName]?.reset) {
         sketches[currentSketchName].reset();

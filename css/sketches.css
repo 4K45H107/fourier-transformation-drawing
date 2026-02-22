@@ -62,12 +62,29 @@ body.sketch-page {
     font-family: Arial, sans-serif;
 }
 
-/* Draw Fourier Controls - Same styling as square wave */
+/* Draw Fourier Controls - Main controls (pause/play/reset) - top center */
 #draw-fourier-controls {
     position: fixed;
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
+    background: #000000;
+    border: 2px solid #ffffff;
+    border-radius: 6px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 1000;
+    font-family: Arial, sans-serif;
+}
+
+/* Draw Fourier Mode Controls - Right side of canvas */
+#draw-fourier-mode-controls {
+    position: fixed;
+    top: 50%;
+    left: calc(50% + 600px + 20px);
+    transform: translateY(-50%);
     background: #000000;
     border: 2px solid #ffffff;
     border-radius: 6px;
