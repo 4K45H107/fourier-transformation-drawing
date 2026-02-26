@@ -69,3 +69,39 @@ function generatePiSignal(p, N, size) {
     
     return { signalX, signalY };
 }
+
+function generatePi(p, N, scale) {
+    let signalX = [];
+    let signalY = [];
+
+    // Balanced vertices with a thin left hook
+    const vertices = [
+        {x: -70, y: -40}, {x: 70, y: -40},   // Top bar (Top)
+        {x: 70, y: -30},                     // Top bar (Right edge)
+        {x: 30, y: -30},                     // Under bar (Right)
+        {x: 30, y: 60},                      // Right leg (Outer)
+        {x: 40, y: 65}, {x: 20, y: 65},      // Right foot serif
+        {x: 15, y: 60}, {x: 15, y: -30},     // Right leg (Inner) - Width is 15
+        {x: -15, y: -30},                    // Middle gap
+        {x: -15, y: 30},                     // Left leg (Inner)
+        {x: -25, y: 60}, {x: -45, y: 65},    // Left hook (Bottom)
+        {x: -55, y: 50}, {x: -30, y: 20},    // Left hook (Curving back)
+        {x: -30, y: -30},                    // Left leg (Outer) - Width is 15
+        {x: -70, y: -30},                    // Under bar (Left)
+        {x: -70, y: -40}                     // Back to start
+    ];
+
+    for (let i = 0; i < N; i++) {
+        let percent = (i / N) * (vertices.length - 1);
+        let index = Math.floor(percent);
+        let nextIndex = (index + 1) % vertices.length;
+        let lerpFactor = percent - index;
+
+        // Using p.lerp to ensure points are distributed evenly
+        // This prevents the "jumping" or "shaking" of circles
+        signalX[i] = p.lerp(vertices[index].x, vertices[nextIndex].x, lerpFactor) * (scale / 100);
+        signalY[i] = p.lerp(vertices[index].y, vertices[nextIndex].y, lerpFactor) * (scale / 100);
+    }
+
+    return { signalX, signalY };
+}

@@ -14,11 +14,6 @@ let drawFourierState = {
 };
 
 function initializeDrawFourierMode(p) {
-    // Generate signals
-    // let signals = generateCircleSignal(p, 300, 120); // CIRCLE
-    // let signals = generateRoseSignal(p, 500, 4, 100); // ROSE PATTERN
-    // let signals = generatePiSignal(p, 300, 120); // PI PATTERN
-    let signals = generateButterflySignal(p, 300, 50); // BUTTERFLY PATTERN
 
     // Reset state
     drawFourierState.TIME = 0;
@@ -29,6 +24,12 @@ function initializeDrawFourierMode(p) {
     drawFourierState.fourier = [];
     drawFourierState.fourierX = [];
     drawFourierState.fourierY = [];
+
+    // Generate signals
+    // let signals = generateCircleSignal(p, 300, 120); // CIRCLE
+    // let signals = generateRoseSignal(p, 500, 4, 100); // ROSE PATTERN
+    // let signals = generateButterflySignal(p, 300, 50); // BUTTERFLY PATTERN
+    let signals = generatePi(p, 300, 200); // PI PATTERN
     
     if (drawFourierState.mode === 'dual') {
         setupDualEpicycleMode(p, drawFourierState, signals);
