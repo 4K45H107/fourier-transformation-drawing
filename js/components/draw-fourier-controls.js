@@ -66,6 +66,25 @@ function createDrawFourierControls(state) {
         }
     });
     modeContainer.appendChild(modeControl);
+
+    // Shape selector
+    const shapeControl = createModeSelector({
+        label: 'Shape:',
+        value: state.shape,
+        options: DRAW_SHAPES.map(({ value, label }) => ({ value, label })),
+        onChange: (newShape) => {
+            state.shape = newShape;
+            state.paused = false;
+            const btn = document.getElementById('draw-fourier-pause-play-btn');
+            if (btn) {
+                btn.textContent = '⏸';
+            }
+            if (typeof reinitializeDrawFourierMode === 'function') {
+                reinitializeDrawFourierMode();
+            }
+        }
+    });
+    modeContainer.appendChild(shapeControl);
     
     document.body.appendChild(modeContainer);
     
