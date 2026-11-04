@@ -12,7 +12,14 @@ const sketches = {
     'draw-fourier': {
         setup: setupDrawWithFourierTransformation,
         draw: drawDrawWithFourierTransformation,
-        reset: resetDrawWithFourierTransformation
+        reset: resetDrawWithFourierTransformation,
+        mousePressed: (p) => freehandPointerDown(p),
+        mouseDragged: (p) => freehandPointerMove(p),
+        mouseReleased: (p) => freehandPointerUp(p),
+        // Touch: same handlers; returning false stops the page scrolling
+        touchStarted: (p) => !freehandPointerDown(p),
+        touchMoved: (p) => !freehandPointerMove(p),
+        touchEnded: (p) => !freehandPointerUp(p)
     }
 };
 
@@ -98,6 +105,14 @@ function showSketch(sketchName) {
         p.draw = function() {
             sketch.draw(p);
         };
+
+        // Optional pointer handlers, for sketches that take mouse/touch input
+        ['mousePressed', 'mouseDragged', 'mouseReleased',
+         'touchStarted', 'touchMoved', 'touchEnded'].forEach((event) => {
+            if (sketch[event]) {
+                p[event] = (e) => sketch[event](p, e);
+            }
+        });
     }, 'sketch-container');
 }
 

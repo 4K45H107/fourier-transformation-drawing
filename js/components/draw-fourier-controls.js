@@ -93,6 +93,9 @@ function createDrawFourierControls(state) {
         options: DRAW_SHAPES.map(({ value, label }) => ({ value, label })),
         onChange: (newShape) => {
             state.shape = newShape;
+            if (newShape === 'freehand') {
+                startNewFreehandDrawing();
+            }
             state.paused = false;
             const btn = document.getElementById('draw-fourier-pause-play-btn');
             if (btn) {

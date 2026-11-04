@@ -121,6 +121,48 @@ function generateHeartSignal(p, N, scale) {
     return { signalX, signalY };
 }
 
+// Turn a hand-drawn stroke into N evenly spaced points. The stroke is closed
+// with a straight line back to its start (the Fourier transform treats the
+// shape as a loop), centred on its middle, and shrunk if it's larger than
+// maxHalfSize in either direction.
+function generateFreehandSignal(points, N, maxHalfSize) {
+    const closed = [...points, points[0]];
+
+    // Cumulative distance along the stroke
+    const dist = [0];
+    for (let i = 1; i < closed.length; i++) {
+        dist[i] = dist[i - 1] + Math.hypot(closed[i].x - closed[i - 1].x, closed[i].y - closed[i - 1].y);
+    }
+    const total = dist[dist.length - 1];
+
+    // Sample N points at equal distances along it
+    const sampled = [];
+    let seg = 1;
+    for (let i = 0; i < N; i++) {
+        const target = (i / N) * total;
+        while (seg < closed.length - 1 && dist[seg] < target) seg++;
+        const span = dist[seg] - dist[seg - 1] || 1;
+        const t = (target - dist[seg - 1]) / span;
+        sampled.push({
+            x: closed[seg - 1].x + (closed[seg].x - closed[seg - 1].x) * t,
+            y: closed[seg - 1].y + (closed[seg].y - closed[seg - 1].y) * t,
+        });
+    }
+
+    // Centre on the middle of its bounding box, and fit the size
+    const xs = sampled.map((pt) => pt.x);
+    const ys = sampled.map((pt) => pt.y);
+    const cx = (Math.min(...xs) + Math.max(...xs)) / 2;
+    const cy = (Math.min(...ys) + Math.max(...ys)) / 2;
+    const half = Math.max(Math.max(...xs) - cx, Math.max(...ys) - cy, 1);
+    const scale = Math.min(1, maxHalfSize / half);
+
+    return {
+        signalX: sampled.map((pt) => (pt.x - cx) * scale),
+        signalY: sampled.map((pt) => (pt.y - cy) * scale),
+    };
+}
+
 // Shapes offered in the Fourier Transformation Arts picker.
 // To add one: write a generator above, then add an entry here.
 const DRAW_SHAPES = [
@@ -129,4 +171,6 @@ const DRAW_SHAPES = [
     { value: 'rose', label: 'Rose', generate: (p) => generateRoseSignal(p, 500, 4, 150) },
     { value: 'butterfly', label: 'Butterfly', generate: (p) => generateButterflySignal(p, 300, 50) },
     { value: 'circle', label: 'Circle', generate: (p) => generateCircleSignal(p, 300, 120) },
+    // Uses the stroke drawn on the canvas (see the freehand handlers)
+    { value: 'freehand', label: '✏️ Draw', generate: null },
 ];
