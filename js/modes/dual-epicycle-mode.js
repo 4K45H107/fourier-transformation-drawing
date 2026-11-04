@@ -66,16 +66,16 @@ function drawDualEpicycleMode(p, state) {
     }
 
     if (!state.paused) {
-
-        state.PATH.unshift(finalPos);
-        
-        const N = state.SIGNAL_X.length; 
-        const dt = p.TWO_PI / N;
-        state.TIME += dt;
-    }
-    
-    if (state.TIME >= p.TWO_PI) {
-        state.TIME = 0;
-        state.PATH = [];
+        advanceDrawing(p, state, state.SIGNAL_X.length, (t) => {
+            let x = 800;
+            for (const { freq, amp, phase } of state.fourierX) {
+                x += amp * Math.cos(freq * t + phase);
+            }
+            let y = 450;
+            for (const { freq, amp, phase } of state.fourierY) {
+                y += amp * Math.sin(freq * t + phase + Math.PI / 2);
+            }
+            return p.createVector(x, y);
+        });
     }
 }

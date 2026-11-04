@@ -1,5 +1,6 @@
 let drawFourierState = {
     mode: 'single',
+    shape: 'pi',
     SIGNAL: [],
     SIGNAL_X: [],
     SIGNAL_Y: [],
@@ -10,6 +11,7 @@ let drawFourierState = {
     TIME: 0,
     paused: false,
     speed: 1,
+    stepBudget: 0, // fractional steps carried between frames (for slow speeds)
     p5Instance: null, // Store p5 instance for reinitialization
 };
 
@@ -17,6 +19,7 @@ function initializeDrawFourierMode(p) {
 
     // Reset state
     drawFourierState.TIME = 0;
+    drawFourierState.stepBudget = 0;
     drawFourierState.PATH = [];
     drawFourierState.SIGNAL = [];
     drawFourierState.SIGNAL_X = [];
@@ -25,11 +28,9 @@ function initializeDrawFourierMode(p) {
     drawFourierState.fourierX = [];
     drawFourierState.fourierY = [];
 
-    // Generate signals
-    // let signals = generateCircleSignal(p, 300, 120); // CIRCLE
-    // let signals = generateRoseSignal(p, 500, 4, 100); // ROSE PATTERN
-    // let signals = generateButterflySignal(p, 300, 50); // BUTTERFLY PATTERN
-    let signals = generatePi(p, 300, 200); // PI PATTERN
+    // Generate the selected shape's signal
+    const shape = DRAW_SHAPES.find((s) => s.value === drawFourierState.shape) || DRAW_SHAPES[0];
+    let signals = shape.generate(p);
     
     if (drawFourierState.mode === 'dual') {
         setupDualEpicycleMode(p, drawFourierState, signals);
@@ -66,4 +67,31 @@ function resetDrawWithFourierTransformation() {
     drawFourierState.TIME = 0;
     drawFourierState.PATH = [];
     drawFourierState.paused = false;
+}
+
+// Speed presets for the drawing (multiples of the normal pace)
+const DRAW_SPEEDS = [0.25, 0.5, 1, 2, 4];
+
+// Advance the drawing at the current speed, always in whole sample steps:
+// the DFT reproduces the shape exactly only at the sample points, and in
+// between its high frequencies swing wildly. So 4x takes 4 steps per frame
+// (recording the pen at each, so the line keeps its detail), and 0.25x
+// takes one step every 4th frame.
+function advanceDrawing(p, state, N, penAt) {
+    const dt = p.TWO_PI / N;
+    state.stepBudget = (state.stepBudget || 0) + state.speed;
+    const steps = Math.floor(state.stepBudget);
+    state.stepBudget -= steps;
+
+    for (let s = 0; s < steps; s++) {
+        state.PATH.unshift(penAt(state.TIME));
+        state.TIME += dt;
+
+        // One full turn draws the whole shape; then start over
+        if (state.TIME >= p.TWO_PI) {
+            state.TIME = 0;
+            state.PATH = [];
+            return;
+        }
+    }
 }

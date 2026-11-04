@@ -105,3 +105,28 @@ function generatePi(p, N, scale) {
 
     return { signalX, signalY };
 }
+
+function generateHeartSignal(p, N, scale) {
+    let signalX = [];
+    let signalY = [];
+
+    for (let i = 0; i < N; i++) {
+        let t = p.map(i, 0, N, 0, p.TWO_PI);
+
+        // Classic heart curve; y is flipped because the canvas y axis points down
+        signalX[i] = scale * 16 * Math.pow(Math.sin(t), 3);
+        signalY[i] = -scale * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+    }
+
+    return { signalX, signalY };
+}
+
+// Shapes offered in the Fourier Transformation Arts picker.
+// To add one: write a generator above, then add an entry here.
+const DRAW_SHAPES = [
+    { value: 'pi', label: 'π', generate: (p) => generatePi(p, 300, 200) },
+    { value: 'heart', label: 'Heart', generate: (p) => generateHeartSignal(p, 300, 10) },
+    { value: 'rose', label: 'Rose', generate: (p) => generateRoseSignal(p, 500, 4, 150) },
+    { value: 'butterfly', label: 'Butterfly', generate: (p) => generateButterflySignal(p, 300, 50) },
+    { value: 'circle', label: 'Circle', generate: (p) => generateCircleSignal(p, 300, 120) },
+];
