@@ -16,8 +16,8 @@ function setupSingleEpicycleMode(p, state, signals) {
 function drawSingleEpicycleMode(p, state) {
     p.background(0);
     
-    const centerX = p.width / 2;
-    const centerY = p.height / 2;
+    const centerX = CANVAS_W / 2;
+    const centerY = CANVAS_H / 2;
     
     let X = centerX;
     let Y = centerY;
