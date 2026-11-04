@@ -65,9 +65,13 @@ function createDrawFourierControls(state) {
     
     document.body.appendChild(container);
     
-    // Create separate mode controls container - right side
+    // Right side: a column holding the Mode/Shape box and the Draw box
     const modeContainer = document.createElement('div');
     modeContainer.id = 'draw-fourier-mode-controls';
+
+    const pickerBox = document.createElement('div');
+    pickerBox.className = 'draw-fourier-box';
+    modeContainer.appendChild(pickerBox);
     
     // Mode selector
     const modeControl = createModeSelector({
@@ -84,7 +88,7 @@ function createDrawFourierControls(state) {
             }
         }
     });
-    modeContainer.appendChild(modeControl);
+    pickerBox.appendChild(modeControl);
 
     // Shape selector
     const shapeControl = createModeSelector({
@@ -93,6 +97,7 @@ function createDrawFourierControls(state) {
         options: DRAW_SHAPES.map(({ value, label }) => ({ value, label })),
         onChange: (newShape) => {
             state.shape = newShape;
+            setButtonActive(drawBtn, false);
             state.paused = false;
             const btn = document.getElementById('draw-fourier-pause-play-btn');
             if (btn) {
@@ -103,11 +108,38 @@ function createDrawFourierControls(state) {
             }
         }
     });
-    modeContainer.appendChild(shapeControl);
-    
+    pickerBox.appendChild(shapeControl);
+
+    // Draw box: freehand drawing, kept apart from the shape list
+    const drawBox = document.createElement('div');
+    drawBox.className = 'draw-fourier-box';
+    const drawBtn = document.createElement('button');
+    drawBtn.id = 'draw-fourier-freehand-btn';
+    drawBtn.textContent = '✏️ Draw';
+    drawBtn.className = 'control-btn';
+    drawBtn.style.cssText = 'padding: 8px 16px; min-width: 70px; font-size: 0.95rem; white-space: nowrap; height: auto; color: #ffffff;';
+    setButtonActive(drawBtn, state.shape === 'freehand');
+    drawBtn.onclick = () => {
+        state.shape = 'freehand';
+        startNewFreehandDrawing();
+        setButtonActive(drawBtn, true);
+        // No shape is selected while drawing
+        Array.from(shapeControl.querySelectorAll('button')).forEach((b) => setButtonActive(b, false));
+        if (typeof reinitializeDrawFourierMode === 'function') {
+            reinitializeDrawFourierMode();
+        }
+    };
+    drawBox.appendChild(drawBtn);
+    modeContainer.appendChild(drawBox);
+
     document.body.appendChild(modeContainer);
     
     return container;
+}
+
+// Selected buttons are highlighted the same way as in createModeSelector
+function setButtonActive(button, active) {
+    button.style.background = active ? '#444444' : 'rgba(255, 255, 255, 0.1)';
 }
 
 function createModeSelector(options) {
