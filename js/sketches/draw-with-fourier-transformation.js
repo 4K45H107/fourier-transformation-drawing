@@ -127,7 +127,8 @@ function freehandActive() {
 }
 
 function insideCanvas(p) {
-    return p.mouseX >= 0 && p.mouseX <= p.width && p.mouseY >= 0 && p.mouseY <= p.height;
+    const { x, y } = sketchPointer(p);
+    return x >= 0 && x <= CANVAS_W && y >= 0 && y <= CANVAS_H;
 }
 
 // Clear the canvas and wait for a new drawing
@@ -147,7 +148,7 @@ function freehandPointerDown(p) {
     if (!freehandActive() || !insideCanvas(p)) return false;
     const freehand = drawFourierState.freehand;
     freehand.phase = 'drawing';
-    freehand.stroke = [{ x: p.mouseX, y: p.mouseY }];
+    freehand.stroke = [sketchPointer(p)];
     freehand.points = null;
     freehand.hint = '';
     return true;
@@ -156,8 +157,9 @@ function freehandPointerDown(p) {
 function freehandPointerMove(p) {
     const freehand = drawFourierState.freehand;
     if (!freehandActive() || freehand.phase !== 'drawing') return false;
-    const x = p.constrain(p.mouseX, 0, p.width);
-    const y = p.constrain(p.mouseY, 0, p.height);
+    const pointer = sketchPointer(p);
+    const x = p.constrain(pointer.x, 0, CANVAS_W);
+    const y = p.constrain(pointer.y, 0, CANVAS_H);
     const last = freehand.stroke[freehand.stroke.length - 1];
     if (Math.hypot(x - last.x, y - last.y) >= 2) {
         freehand.stroke.push({ x, y });
@@ -206,9 +208,9 @@ function drawFreehandCanvas(p) {
         p.fill(255, 170);
         p.textAlign(p.CENTER, p.CENTER);
         p.textSize(22);
-        p.text('Draw a shape', p.width / 2, p.height / 2 - 18);
+        p.text('Draw a shape', CANVAS_W / 2, CANVAS_H / 2 - 18);
         p.fill(255, 110);
         p.textSize(15);
-        p.text(freehand.hint || 'Release to watch the epicycles redraw it', p.width / 2, p.height / 2 + 16);
+        p.text(freehand.hint || 'Release to watch the epicycles redraw it', CANVAS_W / 2, CANVAS_H / 2 + 16);
     }
 }

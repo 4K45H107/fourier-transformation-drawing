@@ -2,6 +2,69 @@
 let currentSketch = null;
 let currentSketchName = null;
 
+// Sketches draw in a fixed 1200x700 space; the canvas is scaled to fit the
+// screen (never larger than this), and pointer input is scaled back.
+const CANVAS_W = 1200;
+const CANVAS_H = 700;
+const LAYOUT_GAP = 16;
+
+// Fit now, and again once the browser has settled the page size: mobile
+// browsers can report an in-between size while loading or rotating
+function scheduleFit(p) {
+    fitCanvas(p);
+    requestAnimationFrame(() => requestAnimationFrame(() => fitCanvas(p)));
+}
+
+// Pointer position in sketch coordinates
+function sketchPointer(p) {
+    const scale = p.fitScale || 1;
+    return { x: p.mouseX / scale, y: p.mouseY / scale };
+}
+
+// Size the canvas to the screen, and place the side panel (if any) beside
+// or below it, whichever leaves the bigger canvas.
+function fitCanvas(p) {
+    const container = document.getElementById('sketch-container');
+    const panel = document.getElementById('draw-fourier-mode-controls');
+    const topBar = document.getElementById('draw-fourier-controls')
+        || document.getElementById('square-wave-controls');
+    const vw = document.documentElement.clientWidth;
+    const vh = window.innerHeight;
+    const top = (topBar ? topBar.getBoundingClientRect().bottom : 0) + LAYOUT_GAP;
+    const fit = (w, h) => Math.max(0.1, Math.min(w / CANVAS_W, h / CANVAS_H, 1));
+
+    let scale = fit(vw - 2 * LAYOUT_GAP, vh - top - LAYOUT_GAP);
+    let bottom = LAYOUT_GAP;
+
+    if (panel) {
+        panel.classList.remove('layout-below');
+        panel.classList.add('layout-beside');
+        // Beside only works if the whole panel fits the screen height
+        const besideScale = panel.offsetHeight <= vh - 2 * LAYOUT_GAP
+            ? fit(vw - 2 * (panel.offsetWidth + 2 * LAYOUT_GAP), vh - top - LAYOUT_GAP)
+            : 0;
+
+        panel.classList.replace('layout-beside', 'layout-below');
+        const panelHeight = panel.offsetHeight;
+        const belowScale = fit(vw - 2 * LAYOUT_GAP, vh - top - panelHeight - 2 * LAYOUT_GAP);
+
+        if (besideScale >= belowScale) {
+            panel.classList.replace('layout-below', 'layout-beside');
+            scale = besideScale;
+        } else {
+            scale = belowScale;
+            bottom = panelHeight + 2 * LAYOUT_GAP;
+        }
+    }
+
+    p.fitScale = scale;
+    const width = Math.round(CANVAS_W * scale);
+    p.resizeCanvas(width, Math.round(CANVAS_H * scale));
+    container.style.paddingTop = `${top}px`;
+    container.style.paddingBottom = `${bottom}px`;
+    document.documentElement.style.setProperty('--canvas-half-width', `${width / 2}px`);
+}
+
 // Sketch registry
 const sketches = {
     'square-wave': {
@@ -100,10 +163,16 @@ function showSketch(sketchName) {
     currentSketch = new p5(function(p) {
         p.setup = function() {
             sketch.setup(p);
+            scheduleFit(p);
         };
         
         p.draw = function() {
+            p.scale(p.fitScale || 1);
             sketch.draw(p);
+        };
+
+        p.windowResized = function() {
+            scheduleFit(p);
         };
 
         // Optional pointer handlers, for sketches that take mouse/touch input
@@ -128,6 +197,11 @@ function handleRoute() {
 
 // Listen for hash changes
 window.addEventListener('hashchange', handleRoute);
+
+// Phone rotation (some browsers fire this without a usable resize)
+window.addEventListener('orientationchange', () => {
+    if (currentSketch) scheduleFit(currentSketch);
+});
 
 // Handle initial load - wait for p5.js to load
 window.addEventListener('DOMContentLoaded', () => {
