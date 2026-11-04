@@ -171,6 +171,4 @@ const DRAW_SHAPES = [
     { value: 'rose', label: 'Rose', generate: (p) => generateRoseSignal(p, 500, 4, 150) },
     { value: 'butterfly', label: 'Butterfly', generate: (p) => generateButterflySignal(p, 300, 50) },
     { value: 'circle', label: 'Circle', generate: (p) => generateCircleSignal(p, 300, 120) },
-    // Uses the stroke drawn on the canvas (see the freehand handlers)
-    { value: 'freehand', label: '✏️ Draw', generate: null },
 ];
