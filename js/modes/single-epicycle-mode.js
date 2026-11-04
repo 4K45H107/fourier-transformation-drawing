@@ -63,15 +63,14 @@ function drawSingleEpicycleMode(p, state) {
     }
 
     if (!state.paused) {
-        state.PATH.unshift(finalPos);
-        
-        const N = state.SIGNAL.length; 
-        const dt = p.TWO_PI / N;
-        state.TIME += dt;
-    }
-    
-    if (state.TIME >= p.TWO_PI) {
-        state.TIME = 0;
-        state.PATH = [];
+        advanceDrawing(p, state, state.SIGNAL.length, (t) => {
+            let x = centerX;
+            let y = centerY;
+            for (const { freq, amp, phase } of state.fourier) {
+                x += amp * Math.cos(freq * t + phase);
+                y += amp * Math.sin(freq * t + phase);
+            }
+            return p.createVector(x, y);
+        });
     }
 }
